@@ -3,9 +3,12 @@ const Users = require('../models/users');
 const SHA256 = require("crypto-js/sha256");
 const authentication = require('../middleware/authentication');
 const UserDetails = require('../models/user_details');
+const UserPackages = require('../models/user_package');
 // const onlyAdmin = require('../middleware/onlyAdmin');
 
 const route = express.Router();
+
+//User Basic Modules
 
 route.get('/',authentication,async(req,res)=>{
     try {
@@ -104,7 +107,7 @@ route.post('/login',async(req,res)=>{
     }
 })
 
-route.post('/create',async(req,res)=>{
+route.post('/create',authentication,async(req,res)=>{
     try {
         const { 
             name,
@@ -151,9 +154,6 @@ route.post('/create',async(req,res)=>{
             meta    : req.body,
         });
     } catch (error) {
-
-        console.log(error);
-
         res.status(422).json({
             status  : 'error',
             message : 'Unable to registering user',
@@ -162,7 +162,7 @@ route.post('/create',async(req,res)=>{
     }
 })
 
-route.patch('/:id',async(req,res)=>{
+route.patch('/:id',authentication,async(req,res)=>{
 
     const {id} = req.params;
     const {
@@ -220,7 +220,7 @@ route.patch('/:id',async(req,res)=>{
     }
 })
 
-route.delete('/:id',async(req,res)=>{
+route.delete('/:id',authentication,async(req,res)=>{
 
     const {id} = req.params;
 
@@ -239,6 +239,48 @@ route.delete('/:id',async(req,res)=>{
             status:'error',
             message:'Unable to remove user data, '+error,
         })
+    }
+})
+
+// User Subscription
+route.post('/subscribe',authentication,async(req,res)=>{
+    try {
+        const {
+            package_id,
+        } = req.body;
+
+        const today = new Date();
+
+        const valid_until = today.setMonth(today.getMonth()+1);
+
+        const query = {
+            package_id,
+            user_id:req.user._id,
+            valid_until:valid_until
+        }
+
+        const UserPackagesModel = new UserPackages(query);
+        await UserPackagesModel.save();
+
+        res.json({
+            status  : 'success',
+            message : 'User successfully subscribed package',
+            data    : UserPackagesModel,
+            meta    : {
+                request:req.body
+            },
+        });
+
+    } catch (error) {
+        
+        res.status(422).json({
+            status  : 'success',
+            message : 'Unable to subscribe this package, '+error,
+            meta    : {
+                request:req.body
+            },
+        });
+
     }
 })
 

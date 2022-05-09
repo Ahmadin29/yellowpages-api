@@ -9,8 +9,6 @@ router.use(async (req,res,next)=>{
             token:req.headers['token'],
         }).exec();
 
-        console.log(users);
-
         if (users) {
             req.user = users;
             next();

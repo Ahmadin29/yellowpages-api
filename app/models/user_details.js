@@ -7,7 +7,7 @@ const user_details = new mongoose.Schema({
     date_of_birth:Date,
     state:Object,
     city:Object,
-    districy:Object,
+    district:Object,
     zip_code:String,
 },{
     timestamps:true,

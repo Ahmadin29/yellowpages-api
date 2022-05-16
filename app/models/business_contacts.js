@@ -11,6 +11,7 @@ const business_contacts = new mongoose.Schema({
         required:true,
         unique:true,
     },
+    person_job_title:String,
     person_phone_number:String,
     person_address:String,
     website:String,

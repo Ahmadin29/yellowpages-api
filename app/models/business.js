@@ -27,6 +27,7 @@ const business = new mongoose.Schema({
     short_description:{
         type:String,
         required:true,
+        maxlength:50,
     },
     detail:{
         type:mongoose.Types.ObjectId,

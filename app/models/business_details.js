@@ -21,14 +21,27 @@ const business_details = new mongoose.Schema({
     gst_number:String,
     phone_number:String,
     address:String,
-    state:Object,
-    city:Object,
-    district:Object,
-    year_established:Date,
-    social_media:[{
+    state:{
         type:mongoose.Types.ObjectId,
-        ref:"BusinessSocialMedia"
-    }]
+        ref:"State"
+    },
+    district:{
+        type:mongoose.Types.ObjectId,
+        ref:"district"
+    },
+    town:{
+        type:mongoose.Types.ObjectId,
+        ref:"Town"
+    },
+    area:{
+        type:mongoose.Types.ObjectId,
+        ref:"Area"
+    },
+    year_established:Date,
+    // social_media:[{
+    //     type:mongoose.Types.ObjectId,
+    //     ref:"BusinessSocialMedia"
+    // }]
 },{
     timestamps:true,
 }).plugin(uniqueValidator, { message: 'Error,{PATH} is already taken' })

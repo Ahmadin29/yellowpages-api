@@ -11,6 +11,7 @@ router.use(async (req,res,next)=>{
 
         if (users) {
             req.user = users;
+            req.role = 'users';
             next();
         }else{
             throw "user not found"
